@@ -108,7 +108,7 @@ Now your setup will look like this:
 git clone <ansible-config-mgt repo link>
 ```
 
-![git clone](./Images/git%20clone%20ansible.PNG)
+![Alt text](<Ansible-automation/git clone.png>)
 
 
 ## **Step 3 - BEGIN ANSIBLE DEVELOPMENT**
@@ -142,12 +142,18 @@ Save below inventory structure in the `inventory/dev` file to start configuring 
 
 Note: Ansible uses TCP port 22 by default, which means it needs to `ssh` into target servers from `Jenkins-Ansible` host – for this you can implement the concept of ssh-agent. Now you need to import your key into `ssh-agent`:
 
+[set up open ssh on Windows]  https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=powershell
+
+or 
+
+If you want to use the ssh-keygen, then run it using **`ssh-keygen -t ed255519`** to generate a public key, then add it using **`echo "(sshkey)" >> ~/.ssh/authorized_key `**, Do this for all the servers you want ansible to connect to automatically
 
 ```
-eval `ssh-agent -s`
+`eval "$(ssh-agent -s)"`
 
 ssh-add <path-to-private-key>
 ```
+![Alt text](Ansible-automation/sshconfig.png)
 
 Confirm the key has been added with the command below, you should see the name of your key
 
@@ -159,6 +165,7 @@ Now, ssh into your `Jenkins-Ansible` server using ssh-agent
 ```
 ssh -A ubuntu@public-ip
 ```
+
 Also note, that your Load Balancer user is `ubuntu` and user for RHEL-based servers is `ec2-user`.
 
 Update your `inventory/dev.yml` file with this snippet of code:
@@ -247,7 +254,7 @@ git commit -m "commit message"
 
 Once the code changes appear in master branch – Jenkins will do its job and save all the files (build artifacts) to /var/lib/jenkins/jobs/ansible/builds/<build_number>/archive/ directory on Jenkins-Ansible server as shown below.
 
-![checking ansible build](./Images/checking%20the%20ansible%20build.PNG)
+![Alt text](Ansible-automation/playbookdisplay.png)
 
 
 
@@ -261,13 +268,18 @@ Now, it is time to execute ansible-playbook command and verify if your playbook 
 
 Connect to your jenkins-ansible server via VScode (configure the .ssh/config file with your jenkins server information)
 
-```
-ansible-playbook -i /var/lib/jenkins/jobs/ansible/builds/<build-number>/archive/inventory/dev.yml /var/lib/jenkins/jobs/ansible/builds/<build-number>/archive/playbooks/common.yml
-```
+**`cd ansible-config-mgt`**
 
-![Run first ansible test](./Images/run%20ansible%20playbook.PNG)
+**`ansible-playbook -i inventory/dev.yml playbooks/common.yml`**
+
+
+![Alt text](<Ansible-automation/ansible run.png>)
+
+You can go to each of the servers to run the command **`wireshark --version`** or **`which wireshark`** to confirm that wireshark was successfully installed.
+
+![Alt text](<Ansible-automation/wireshark version.png>)
 
 
 At the end of this project we have implemented a solution that is shown below
 
-![Final Architecture](./Images/final%20architecture.PNG)
+![Alt text](<Ansible-automation/anisble architecture.png>)
