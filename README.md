@@ -1,2 +1,1 @@
 # ansible-config-mgt
-# test
