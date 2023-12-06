@@ -1,2 +1,2 @@
 ## First Update for DevOps
-## ansible is nice
+## ansible makes configuration fast
